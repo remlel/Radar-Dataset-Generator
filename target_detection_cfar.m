@@ -1,6 +1,6 @@
-function [row, col] = detection_target_CFAR(software, resp)
+function [row, col] = target_detection_cfar(software, resp, Nstep)
 
-    % 1. Délimitation des CUT Cells 
+    % 1. CUT Cells Delimitation
     row_min = software.tr_range_size + software.gu_range_size + 1;
     row_max = size(resp,1) - software.tr_range_size - software.gu_range_size;
     col_min = software.tr_dop_size + software.gu_dop_size + 1;
@@ -19,14 +19,14 @@ function [row, col] = detection_target_CFAR(software, resp)
         end
     end
     
-    % 2. Localisation de la cible sur la carte RD
+    % 2. Target position on RD map
     RD = abs(resp).^2;
     mask = software.cfar(RD, cutidx);
 
     detected = find(mask);
     
     if isempty(detected)
-        warning("Aucune cible détectée.");
+        warning("No target detected for step index number : %d", Nstep);
         row = [];
         col = [];
         return;
@@ -35,7 +35,7 @@ function [row, col] = detection_target_CFAR(software, resp)
     row = cutidx(1, detected);
     col = cutidx(2, detected);
 
-    % Conserve la cellule d'amplitude maximale (si plusieurs cibles || migrations)
+    % Keeps cell of maximum amplitude (in case of : multiple targets or migrations)
     values = RD(sub2ind(size(RD),row,col));
     [~,idx] = max(values);
     row = row(idx);

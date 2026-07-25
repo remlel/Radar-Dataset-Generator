@@ -1,6 +1,6 @@
-function [sigmaAz, sigmaEl] = estimateUncertainty_DOA(spectrum)
+function [sigmaAz, sigmaEl] = estimate_uncertainty_doa(spectrum)
 
-    % Valide pour des pas non unitaire & spectres non carré
+    % Valid for non-unitary steps and a non-square spectrum
     [Ny, Nx] = size(spectrum); 
     Az = linspace(-45, 45, Nx);
     El = linspace(-45, 45, Ny);
@@ -15,14 +15,14 @@ function [sigmaAz, sigmaEl] = estimateUncertainty_DOA(spectrum)
     coupeAz = spec_dB(row, :);
     coupeEl = spec_dB(:, col).'; 
 
-    % ================= AZIMUT =================
+    % ================= AZIMUTH =================
 
     left = col;
     while left > 1 && coupeAz(left) > threshold
         left = left - 1;
     end
 
-    % Gestion des bords
+    % Managing edges
     if coupeAz(left) > threshold
         azLeft = Az(1);
     elseif left < col && coupeAz(left) ~= coupeAz(left+1)

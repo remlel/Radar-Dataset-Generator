@@ -1,6 +1,6 @@
-function roi = extractROI(resp, row, col)
+function roi = extract_roi(resp, row, col)
 
-    % Définition de la taille de la ROI
+    % Defining ROI size
     half_size = 16;
     roi_size = 2*half_size + 1;
 
