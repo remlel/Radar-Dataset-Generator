@@ -1,0 +1,89 @@
+# FMCW Radar Scenario & Dataset Simulator
+
+A highly modular MATLAB-based simulator designed to generate dynamic FMCW radar detection scenarios. This tool allows users to experiment with various radar configurations and generates realistic synthetic datasets (.csv and .mat) that can be used to train and test tracking algorithms (like Kalman Filters) or Machine Learning models.
+
+![Random Trajectory 3D](images/Random_Trajectory_Generated.png)
+*Example of a dynamically generated 3D random trajectory within the radar's detection volume.*
+
+## 🎯 Project Overview
+
+As a student project, the primary goal was to build a flexible simulation environment that bridges the gap between hardware configuration and high-level data processing. 
+
+Instead of hardcoding detection boundaries, this simulator features a **dynamic scenario generation algorithm**. It calculates the maximum detection range $R_{max}(\theta)$ on the fly by interpolating the physical radiation pattern of the configured antenna array. If you change the antenna design (e.g., switching from a 2x2 to a 4x4 array), the trajectory generator automatically adapts its constraints to the new physical limits!
+
+## ✨ Key Features
+
+*   **Modular Radar Hardware:** Easily tweak carrier frequency, bandwidth, transmit power, and antenna array dimensions (Uniform Rectangular Arrays).
+*   **Dynamic Trajectory Generation:** Targets follow a random walk constrained by the physical detection limits of the radar (calculated via the radar equation and antenna gain pattern).
+*   **Full Signal Processing Pipeline:**
+    *   Range-Doppler Response (2D-FFT).
+    *   2D CFAR (Constant False Alarm Rate) detection.
+    *   DOA (Direction of Arrival) estimation using the MUSIC algorithm.
+*   **Angular Uncertainty Analysis:** Leverages the MUSIC algorithm's spectrum to perform a 2D Gaussian approximation of the peak, determining the standard deviation (uncertainty) of the angular measurements.
+*   **Ground Truth vs. Measurements Comparison:** Computes the theoretical ideal measurement values from the ground truth, allowing a direct comparison between the raw radar outputs and a perfectly functioning theoretical system.
+*   **Dataset Export:** Automatically exports generated scenarios in `.csv` and `.mat` formats containing both discrete radar measurements and continuous ground truth data.
+
+## 📊 Visualizing the Physics
+
+The simulator includes specific display functions to visualize the hardware setup and its capabilities.
+
+### Antenna Array Modularity
+You can effortlessly switch configurations (e.g., 2x2 for wide coverage, 4x4 for high directivity). The scenarios adapt automatically.
+
+<p align="center">
+  <img src="images/URA.png" width="45%" alt="4x4 Array View" />
+  <img src="images/Pattern.png" width="45%" alt="4x4 3D Radiation Pattern" />
+</p>
+*Left: 4x4 array elements distribution and boresight axis. Right: Corresponding 3D radiation pattern (with 45° circle).*
+
+<p align="center">
+  <img src="images/Pattern_4x4.png" width="60%" alt="Azimuth Cut Pattern" />
+</p>
+*2D Azimuth cut of the 4x4 radiation pattern.*
+
+### Statistical Analysis
+The simulator can assesse the quality of the MUSIC DOA estimation by generating detailed error distributions, allowing you to build accurate covariance matrices for your tracking algorithms.
+
+<p align="center">
+  <img src="images/Azimuth_Uncertainties_4x4.png" width="45%" alt="4x4 Array View" />
+  <img src="images/Elevation_Uncertainties_4x4.png" width="45%" alt="4x4 3D Radiation Pattern" />
+</p>
+*Left: Distribution of Azimuth measurement uncertainties for a 4x4 array elements. Right: Same for Elevation.*
+
+### Measurements vs. Ground Truth
+The simulator can generate visual comparisons between the raw radar measurements and the theoretical ideal values calculated from the ground truth across all dimensions.
+
+![Measurements Comparison](images/Checking.png)
+*Comparison of measured vs. theoretical values for Range, Radial Velocity, Azimuth, and Elevation over a simulated scenario.*
+
+### Range-Doppler Response
+The simulator can compute the 2D-FFT of the received FMCW signal to generate a Range-Doppler map. This matrix serves as the foundation for the CFAR detection algorithm by isolating target echoes from the noise floor.
+
+![Range-Doppler Map](images/RD_map.png)
+*2D Range-Doppler map highlighting the target's peak power across range and radial velocity bins.*
+
+## 📁 Output Datasets Format
+
+The generated `.csv` files are structured to provide everything needed for algorithm testing. Each row represents a single measurement frame:
+
+| Radar Measurements (Discrete) | Ground Truth (Continuous) |
+| :--- | :--- |
+| `Range (m)` | `True Position X (m)` |
+| `Radial Velocity (m/s)` | `True Position Y (m)` |
+| `Azimuth (°)` | `True Position Z (m)` |
+| `Elevation (°)` | `True Velocity X, Y, Z (m/s)` |
+
+*Note: Missing detections (when the target is out of range or lost in noise) are correctly handled, providing a realistic challenge for tracking algorithms.*
+
+## 🚀 How to Use
+
+1.  Open the project in MATLAB (Requires Phased Array System Toolbox).
+2.  Adjust radar parameters and array size in the `config_radar.m` file.
+3.  Adjuste scenario generation in the `generate_random_waypoints.m` file.
+4.  Run the main simulation script (and choose the settings that interest you).
+5.  Check the command window for the generation progress and detection ratio.
+6.  Retrieve your data in the exported `.csv` and `.mat` files in your working directory (if wanted).
+
+## 🛠️ Future Improvements
+*   Support for multiple simultaneous targets.
+*   Integration of RCS (Radar Cross Section) variations based on target aspect angle.
