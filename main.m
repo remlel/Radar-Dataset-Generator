@@ -12,20 +12,20 @@ clear; clc; close all;
 %=====================================%
 
 % Dictates number of scenarios simulated :
-Num_scenarios = 30;
+Num_scenarios = 1;
 
 % Launchs measurements checking :
-Checking = false;
-Num_checking = 3;           % Indicates how many scenarios will be checked
+Checking = true;
+Num_checking = min(3, Num_scenarios);            % Indicates how many scenarios will be checked
 
 % Launchs calculation of angular standard deviation :
 Sigma = true;  
-Num_sigma = 30;              % Indicates for how many scenarios standard deviations will be calculated
+Num_sigma = min(30, Num_scenarios);              % Indicates for how many scenarios standard deviations will be calculated
                             
 % Plots RD map :            
-Map = false;                 % If false, no map will be plotted
-Num_scenarios_map = 2;          % Indicates the number of scenarios where (a) map(s) will be plotted
-Num_maps_scenario = 3;      % Indicates for a given scenario the number of plotted maps
+Map = true;                                      % If false, no map will be plotted
+Num_scenarios_map = min(2, Num_scenarios);       % Indicates the number of scenarios where (a) map(s) will be plotted
+Num_maps_scenario = 3;                           % Indicates for a given scenario the number of plotted maps
 
 % Saves Data :
 saving = true;
