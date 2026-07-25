@@ -2,7 +2,7 @@
 
 A highly modular MATLAB-based simulator designed to generate dynamic FMCW radar detection scenarios. This tool allows users to experiment with various radar configurations and generates realistic synthetic datasets (.csv and .mat) that can be used to train and test tracking algorithms (like Kalman Filters) or Machine Learning models.
 
-![Random Trajectory 3D](images/Random_Trajectory_Generated.png)
+![Random Trajectory 3D](image/Random_Trajectory_Generated.png)
 *Example of a dynamically generated 3D random trajectory within the radar's detection volume.*
 
 ## 🎯 Project Overview
@@ -31,13 +31,13 @@ The simulator includes specific display functions to visualize the hardware setu
 You can effortlessly switch configurations (e.g., 2x2 for wide coverage, 4x4 for high directivity). The scenarios adapt automatically.
 
 <p align="center">
-  <img src="images/URA.png" width="45%" alt="4x4 Array View" />
-  <img src="images/Pattern.png" width="45%" alt="4x4 3D Radiation Pattern" />
+  <img src="image/URA.png" width="45%" alt="4x4 Array View" />
+  <img src="image/Pattern.png" width="45%" alt="4x4 3D Radiation Pattern" />
 </p>
 *Left: 4x4 array elements distribution and boresight axis. Right: Corresponding 3D radiation pattern (with 45° circle).*
 
 <p align="center">
-  <img src="images/Pattern_4x4.png" width="60%" alt="Azimuth Cut Pattern" />
+  <img src="image/Pattern_4x4.png" width="60%" alt="Azimuth Cut Pattern" />
 </p>
 *2D Azimuth cut of the 4x4 radiation pattern.*
 
@@ -45,21 +45,21 @@ You can effortlessly switch configurations (e.g., 2x2 for wide coverage, 4x4 for
 The simulator can assesse the quality of the MUSIC DOA estimation by generating detailed error distributions, allowing you to build accurate covariance matrices for your tracking algorithms.
 
 <p align="center">
-  <img src="images/Azimuth_Uncertainties_4x4.png" width="45%" alt="4x4 Array View" />
-  <img src="images/Elevation_Uncertainties_4x4.png" width="45%" alt="4x4 3D Radiation Pattern" />
+  <img src="image/Azimuth_Uncertainties_4x4.png" width="45%" alt="4x4 Array View" />
+  <img src="image/Elevation_Uncertainties_4x4.png" width="45%" alt="4x4 3D Radiation Pattern" />
 </p>
 *Left: Distribution of Azimuth measurement uncertainties for a 4x4 array elements. Right: Same for Elevation.*
 
 ### Measurements vs. Ground Truth
 The simulator can generate visual comparisons between the raw radar measurements and the theoretical ideal values calculated from the ground truth across all dimensions.
 
-![Measurements Comparison](images/Checking.png)
+![Measurements Comparison](image/Checking.png)
 *Comparison of measured vs. theoretical values for Range, Radial Velocity, Azimuth, and Elevation over a simulated scenario.*
 
 ### Range-Doppler Response
 The simulator can compute the 2D-FFT of the received FMCW signal to generate a Range-Doppler map. This matrix serves as the foundation for the CFAR detection algorithm by isolating target echoes from the noise floor.
 
-![Range-Doppler Map](images/RD_map.png)
+![Range-Doppler Map](image/RD_map.png)
 *2D Range-Doppler map highlighting the target's peak power across range and radial velocity bins.*
 
 ## 📁 Output Datasets Format
