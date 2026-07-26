@@ -9,7 +9,9 @@ A highly modular MATLAB-based simulator designed to generate dynamic FMCW radar 
 
 As a student project, the primary goal was to build a flexible simulation environment that bridges the gap between hardware configuration and high-level data processing. 
 
-Instead of hardcoding detection boundaries, this simulator features a **dynamic scenario generation algorithm**. It calculates the maximum detection range $R_{max}(\theta)$ on the fly by interpolating the physical radiation pattern of the configured antenna array. If you change the antenna design (e.g., switching from a 2x2 to a 4x4 array), the trajectory generator automatically adapts its constraints to the new physical limits!
+Instead of hardcoding detection boundaries, this simulator features a **dynamic scenario generation algorithm**. It calculates the maximum detection range $R_{max}(\theta)$ on the fly by interpolating the physical radiation pattern of the configured antenna array. If you change the antenna design (e.g., switching from a 2x2 to a 4x4 array), the trajectory generator automatically adapts its constraints to the new physical limits.
+
+Beyond spatial constraints, the trajectory generation relies on a sophisticated and dynamic randomization algorithm. For every scenario, the simulator randomly selects a number of waypoints and computes variable travel times between them using controlled time deviations. To ensure a smooth and mathematically stable completion of the trajectory, the algorithm continuously recalculates the remaining mean travel time and adjusts the physical bounds after each step. This intelligent randomization guarantees that every generated path is entirely unique, physically plausible, and perfectly synchronized with the total simulation time without any risk of edge-case crashes.
 
 ## ✨ Key Features
 
@@ -75,9 +77,15 @@ The generated `.csv` files are structured to provide everything needed for algor
 
 *Note: Missing detections (when the target is out of range or lost in noise) are correctly handled, providing a realistic challenge for tracking algorithms.*
 
+## 📋 Requirements
+
+To run this simulator, you will need MATLAB with the following toolboxes installed:
+*   **Phased Array System Toolbox** (for radar hardware modeling, wave propagation, and signal processing).
+*   **Sensor Fusion and Tracking Toolbox** (or *Navigation Toolbox* / *UAV Toolbox*) for the `waypointTrajectory` kinematic generation.
+
 ## 🚀 How to Use
 
-1.  Open the project in MATLAB (Requires Phased Array System Toolbox).
+1.  Open the project in MATLAB.
 2.  Adjust radar parameters and array size in the `config_radar.m` file.
 3.  Adjuste scenario generation in the `generate_random_waypoints.m` file.
 4.  Run the main simulation script (and choose the settings that interest you).
