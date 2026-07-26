@@ -30,25 +30,26 @@ Beyond spatial constraints, the trajectory generation relies on a sophisticated 
 The simulator includes specific display functions to visualize the hardware setup and its capabilities.
 
 ### Antenna Array Modularity
-You can effortlessly switch configurations (e.g., 2x2 for wide coverage, 4x4 for high directivity). The scenarios adapt automatically.
+You can effortlessly switch configurations (e.g., 2x2 for wide coverage, 4x4 for high directivity). The scenario generation space adapts automatically to the antenna type you are using.
 
 <p align="center">
-  <img src="image/URA.png" width="45%" alt="4x4 Array View" />
-  <img src="image/Pattern.png" width="45%" alt="4x4 3D Radiation Pattern" />
+  <img src="image/Pattern_4x4.png" width="45%" alt="4x4 3D Radiation Pattern" />
+  <img src="image/Pattern_2x2.png" width="45%" alt="2x2 3D Radiation Pattern" />
 </p>
-*Left: 4x4 array elements distribution and boresight axis. Right: Corresponding 3D radiation pattern (with 45° circle).*
+*Left: 3D radiation pattern of a 4x4 array elements. Right: 3D radiation pattern of a 2x2 array elements.*
 
 <p align="center">
-  <img src="image/Pattern_4x4.png" width="60%" alt="Azimuth Cut Pattern" />
+  <img src="image/Pattern_4x4_cut.png" width="45%" alt="4x4 2D Radiation Pattern" />
+  <img src="image/Pattern_2x2_cut.png" width="45%" alt="2x2 2D Radiation Pattern" />
 </p>
-*2D Azimuth cut of the 4x4 radiation pattern.*
+*Left: 2D radiation pattern of a 4x4 array elements. Right: 2D radiation pattern of a 2x2 array elements.*
 
 ### Statistical Analysis
 The simulator can assesse the quality of the MUSIC DOA estimation by generating detailed error distributions, allowing you to build accurate covariance matrices for your tracking algorithms.
 
 <p align="center">
-  <img src="image/Azimuth_Uncertainties_4x4.png" width="45%" alt="4x4 Array View" />
-  <img src="image/Elevation_Uncertainties_4x4.png" width="45%" alt="4x4 3D Radiation Pattern" />
+  <img src="image/Azimuth_Uncertainties_4x4.png" width="45%" alt="Azimuth Uncertainties" />
+  <img src="image/Elevation_Uncertainties_4x4.png" width="45%" alt="Elevation Uncertainties" />
 </p>
 *Left: Distribution of Azimuth measurement uncertainties for a 4x4 array elements. Right: Same for Elevation.*
 
