@@ -1,7 +1,7 @@
 clear; clc; close all;
 
-[hardware, software, params, pattern] = config_radar();
-[radarPlatform, TgtTrajectory, target] = init_scenario(params, pattern);
+[hardware, software, params, patn] = config_radar();
+[radarPlatform, TgtTrajectory, target] = init_scenario(params, patn);
 
 %---------------------------------------------%
 
