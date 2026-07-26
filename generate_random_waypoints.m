@@ -1,13 +1,12 @@
 function [waypoints, time_of_arrivals] = generate_random_waypoints(params, radarPlatform, patn)
 
-    % 1. Constraints
+    % 1. Constraints (User Inputs)
     min_wp = 3;                                                     % Min number of waypoints
     max_wp = 7;                                                     % Max number of waypoints
     R_max00 = 150;                                                  % Max detection range on the boresight axis
     V_max = 35;                                                     % Max target velocity
-    G_az_el = patn.RmaxOverRmax00_vec * R_max00;                 % Max range vector : azimuth & elevation dependency 
+    G_az_el = patn.RmaxOverRmax00_vec * R_max00;                    % Max range vector : azimuth & elevation dependency 
     R_min = 10;                                                     % Min range to radar                                           
-    Angle_max = patn.max_angle;                                  % Max angle (azimuth & elevation) from boresight axis
 
     % 2. Generating the number of intervals
     N_waypoints = randi([min_wp, max_wp]);
@@ -15,7 +14,7 @@ function [waypoints, time_of_arrivals] = generate_random_waypoints(params, radar
     waypoints = zeros(N_waypoints, 3);
 
     % 3. Generating first point
-    pt1 = get_random_starting_point(radarPlatform.Position, R_min, Angle_max, G_az_el, patn);
+    pt1 = get_random_starting_point(radarPlatform.Position, R_min, G_az_el, patn);
     waypoints(1, :) = pt1;
     time_of_arrivals(1, 1) = params.step;
     
@@ -57,6 +56,7 @@ function [waypoints, time_of_arrivals] = generate_random_waypoints(params, radar
     % 6. Generating final point
     prev_pt = waypoints(end-1, :);
     R_step_max = V_max * mean_travel_time;      % mean_travel_time = remaining time to total time
+    R_step_min = min(3, R_step_max * 0.2);
     pt = get_random_point_in_cone(prev_pt, R_step_min, R_step_max, 180);
     bool = verif_point(pt, radarPlatform, G_az_el, patn);
         
@@ -72,11 +72,11 @@ function [waypoints, time_of_arrivals] = generate_random_waypoints(params, radar
 end
 
 
-function pt = get_random_starting_point(vector, R_min, Angle_max, G_az_el, patn)
+function pt = get_random_starting_point(vector, R_min, G_az_el, patn)
 
     % 1. Generates random angles
-    az = -Angle_max + rand() * (2 * Angle_max);
-    el = -Angle_max + rand() * (2 * Angle_max);
+    az = patn.az_min + rand() * (patn.az_max-patn.az_min);
+    el = patn.el_min + rand() * (patn.el_max-patn.el_min);
 
     % 2. Generates a random authorised distance to radar
     R_max = interp2(patn.az_vec, patn.el_vec, G_az_el, az, el);

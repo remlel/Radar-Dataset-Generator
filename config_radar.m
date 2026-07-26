@@ -44,9 +44,14 @@ function [hardware, software, params, patn] = config_radar()
     
     % ---| ANTENNA PATTERN |---
     
-    patn.max_angle = 40;
-    patn.az_vec = -patn.max_angle:1:patn.max_angle;
-    patn.el_vec = -patn.max_angle:1:patn.max_angle;
+    % Defines the angular borders of the pattern vector (-> scenario generation space)
+    patn.az_max = 40;
+    patn.az_min = -40;
+    patn.el_max = 40;
+    patn.el_min = -40;
+
+    patn.az_vec = patn.az_min:1:patn.az_max;
+    patn.el_vec = patn.el_min:1:patn.el_max;
 
     G_vec = pattern(hardware.array, params.fc, patn.az_vec, patn.el_vec);
 
@@ -57,8 +62,11 @@ function [hardware, software, params, patn] = config_radar()
     % ---| SOFTWARE |---
 
     % Estimate DOA
-    software.estimator = phased.MUSICEstimator2D('SensorArray', hardware.array, 'OperatingFrequency', params.fc, 'AzimuthScanAngles', -45:45, ...
-        'ElevationScanAngles', -45:45, 'DOAOutputPort', true, 'NumSignalsSource','Property', 'NumSignals',1);
+    scan_margin = 5;
+    music_az_scan = (patn.az_min-scan_margin):(patn.az_max+scan_margin);
+    music_el_scan = (patn.el_min-scan_margin):(patn.el_max+scan_margin);
+    software.estimator = phased.MUSICEstimator2D('SensorArray', hardware.array, 'OperatingFrequency', params.fc, 'AzimuthScanAngles', music_az_scan, ...
+        'ElevationScanAngles', music_el_scan, 'DOAOutputPort', true, 'NumSignalsSource','Property', 'NumSignals',1);
     
     % CFAR
     software.tr_range_size = 20;
