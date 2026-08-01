@@ -35,6 +35,39 @@ z = R*sin(theta).*sin(phi);
 %---------------------------------------------%
 
 % 3. Displaying generated trajectory
-display_trajectory(radarPlatform, TgtTrajectory, params);
+display_trajectory(radarPlatform, TgtTrajectory, params, patn,software);
 
+%---------------------------------------------%
 
+% 4. Evaluating the realism of the generated scenarios
+
+max_accel_allowed = 50;         % Max acceleration allowed (m/s²)
+valid_scenarios = 0;            % Initiating counter of valid scenarios
+number_scenarios = 0;          % Initiating counter of scenarios
+loop = false;
+
+if loop == true
+    for i = 1:1000
+        
+        % Generating waypoints
+        [waypoints, time_of_arrivals] = generate_random_waypoints(params, radarPlatform, patn);
+        
+        % Creating trajectory
+        traj = waypointTrajectory(waypoints, time_of_arrivals);
+        
+        % Reading each accelerations
+        [~, ~, ~, accel] = lookupPose(traj, 0:params.step:params.Total_time);
+           
+        % Magnitude of acceleration at each instant
+        accel_magnitude = vecnorm(accel, 2, 2); 
+        
+        % Evaluating realism
+        if max(accel_magnitude) <= max_accel_allowed
+            valid_scenarios = valid_scenarios + 1;
+        end
+    
+        number_scenarios = number_scenarios + 1;
+    end
+    
+    fprintf('Ratio of valid scenarios : %.1f%%\n', 100*(valid_scenarios/number_scenarios));
+end

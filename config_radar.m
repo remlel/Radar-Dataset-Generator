@@ -19,8 +19,9 @@ function [hardware, software, params, patn] = config_radar()
     % Simulation parameters
     params.Update_rate = 10;
     params.step = 1/params.Update_rate;
-    params.Total_time = 15;
+    params.Total_time = 20;
     params.Num_step = floor(params.Total_time * params.Update_rate);
+
 
     % ---| HARDWARE MODELS AND PROPAGATION |---
 
@@ -42,6 +43,7 @@ function [hardware, software, params, patn] = config_radar()
     % Free-space propagation model (round-trip)
     hardware.channel = phased.FreeSpace('PropagationSpeed', params.c, 'OperatingFrequency', params.fc, 'SampleRate', params.fs, 'TwoWayPropagation', true);
     
+
     % ---| ANTENNA PATTERN |---
     
     % Defines the angular borders of the pattern vector (-> scenario generation space)
@@ -53,18 +55,19 @@ function [hardware, software, params, patn] = config_radar()
     patn.az_vec = patn.az_min:1:patn.az_max;
     patn.el_vec = patn.el_min:1:patn.el_max;
 
-    G_vec = pattern(hardware.array, params.fc, patn.az_vec, patn.el_vec);
-
-    G00 = pattern(hardware.array, params.fc, 0, 0);
-
+    G_vec = pattern(hardware.array, params.fc, patn.az_vec, patn.el_vec);           % Vector of the discretized antenna pattern
+    G00 = pattern(hardware.array, params.fc, 0, 0);                                 % pattern on the boresight axis (az = 0, el =0)
+    
+    patn.R_max00 = 150;                                                             % Defines pattern range on the boresight axis
     patn.RmaxOverRmax00_vec = 10.^((G_vec - G00) / 20);
+
 
     % ---| SOFTWARE |---
 
     % Estimate DOA
-    scan_margin = 5;
-    music_az_scan = (patn.az_min-scan_margin):(patn.az_max+scan_margin);
-    music_el_scan = (patn.el_min-scan_margin):(patn.el_max+scan_margin);
+    software.scan_margin = 5;
+    music_az_scan = (patn.az_min - software.scan_margin):(patn.az_max + software.scan_margin);
+    music_el_scan = (patn.el_min - software.scan_margin):(patn.el_max + software.scan_margin);
     software.estimator = phased.MUSICEstimator2D('SensorArray', hardware.array, 'OperatingFrequency', params.fc, 'AzimuthScanAngles', music_az_scan, ...
         'ElevationScanAngles', music_el_scan, 'DOAOutputPort', true, 'NumSignalsSource','Property', 'NumSignals',1);
     

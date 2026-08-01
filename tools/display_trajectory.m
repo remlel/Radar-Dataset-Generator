@@ -1,4 +1,4 @@
-function display_trajectory(radarPlatform, TgtTrajectory, params)
+function display_trajectory(radarPlatform, TgtTrajectory, params, patn, software)
     
     % Defining parameters & vector
     t_sim = params.step : params.step : params.Total_time;
@@ -14,7 +14,7 @@ function display_trajectory(radarPlatform, TgtTrajectory, params)
     WPs = TgtTrajectory.Waypoints; 
     
     % 3. 3D Display
-    figure('Name', 'Test Trajectoire 3D', 'Color', 'w');
+    figure('Name', 'Trajectory 3D', 'Color', 'w');
     hold on; grid on; axis equal;
     
     % Plot of the radar
@@ -26,15 +26,30 @@ function display_trajectory(radarPlatform, TgtTrajectory, params)
     
     % Plot of the trajectory
     plot3(pos_history(1,:), pos_history(2,:), pos_history(3,:), '-b', 'LineWidth', 1.5, ...
-        'DisplayName', 'Trajectoire (Splines)');
+        'DisplayName', 'Trajectory (Splines)');
     
-    % Plot of the FOV (+/- 44°)
-    R_max = 300;
-    Angle_max = 44;
-    plot3([0, R_max*cosd(Angle_max)], [0, R_max*sind(Angle_max)], [0, 0], '--r', 'HandleVisibility','off');
-    plot3([0, R_max*cosd(-Angle_max)], [0, R_max*sind(-Angle_max)], [0, 0], '--r', 'DisplayName', 'Limits FOV Azimuth');
-    plot3([0, R_max*cosd( Angle_max)], [0, 0], [0, R_max*sind( Angle_max)], '--r', 'HandleVisibility','off');
-    plot3([0, R_max*cosd(-Angle_max)], [0, 0], [0, R_max*sind(-Angle_max)], '--r', 'DisplayName','Limits FOV Élévation');
+    % Plot of the FOV 
+    R_max = patn.R_max00 * 0.7;
+
+    % Azimuth limits
+    plot3([0, R_max*cosd(patn.az_max + software.scan_margin)], ...
+          [0, R_max*sind(patn.az_max + software.scan_margin)], ...
+          [0, 0], '--r', 'HandleVisibility', 'off');
+    
+    plot3([0, R_max*cosd(patn.az_min - software.scan_margin)], ...
+          [0, R_max*sind(patn.az_min - software.scan_margin)], ...
+          [0, 0], '--r', 'DisplayName', 'Limits FOV Azimuth');
+    
+    % Elevation limits
+    plot3([0, R_max*cosd(patn.el_max + software.scan_margin)], ...
+          [0, 0], ...
+          [0, R_max*sind(patn.el_max + software.scan_margin)], ...
+          '--r', 'HandleVisibility', 'off');
+    
+    plot3([0, R_max*cosd(patn.el_min - software.scan_margin)], ...
+          [0, 0], ...
+          [0, R_max*sind(patn.el_min - software.scan_margin)], ...
+          '--r', 'DisplayName', 'Limits FOV Elevation');
     
     % Labels
     xlabel('X axis - Boresight (m)');

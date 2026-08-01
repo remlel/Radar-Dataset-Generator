@@ -1,10 +1,10 @@
 %% SIMULATION LOOP
 
+clear; clc; close all;
+
 % Creating path towards sub-folders
 projectRoot = fileparts(mfilename('fullpath'));
 addpath(genpath(projectRoot));
-
-clear; clc; close all;
 
 
 %=====================================%
@@ -19,18 +19,19 @@ Checking = true;
 Num_checking = min(3, Num_scenarios);            % Indicates how many scenarios will be checked
 
 % Launchs calculation of angular standard deviation :
-Sigma = true;  
+Sigma = false;  
 Num_sigma = min(30, Num_scenarios);              % Indicates for how many scenarios standard deviations will be calculated
                             
 % Plots RD map :            
-Map = true;                                      % If false, no map will be plotted
+Map = false;                                      % If false, no map will be plotted
 Num_scenarios_map = min(2, Num_scenarios);       % Indicates the number of scenarios where (a) map(s) will be plotted
 Num_maps_scenario = 3;                           % Indicates for a given scenario the number of plotted maps
 
 % Saves Data :
-saving = true;
+saving = false;
 
 %=====================================%
+
 
 % 1. Radar Configuration 
 [hardware, software, params, patn] = config_radar();
