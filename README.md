@@ -2,7 +2,7 @@
 
 A highly modular MATLAB-based simulator designed to generate dynamic FMCW radar detection scenarios. This tool allows users to experiment with various radar configurations and generates realistic synthetic datasets (.csv and .mat) that can be used to train and test tracking algorithms (like Kalman Filters) or Machine Learning models.
 
-![Random Trajectory 3D](image/Random_Trajectory_Generated.png)
+![Random Trajectory 3D](image/Random_Trajectory_Generated2.png)
 *Example of a dynamically generated 3D random trajectory within the radar's detection volume.*
 
 ## 🎯 Project Overview
