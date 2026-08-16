@@ -12,10 +12,10 @@ addpath(genpath(projectRoot));
 %=====================================%
 
 % Dictates number of scenarios simulated :
-Num_scenarios = 1;
+Num_scenarios = 50;
 
 % Launchs measurements checking :
-Checking = true;
+Checking = false;
 Num_checking = min(3, Num_scenarios);            % Indicates how many scenarios will be checked
 
 % Launchs calculation of angular standard deviation :
@@ -23,12 +23,12 @@ Sigma = false;
 Num_sigma = min(30, Num_scenarios);              % Indicates for how many scenarios standard deviations will be calculated
                             
 % Plots RD map :            
-Map = false;                                      % If false, no map will be plotted
+Map = false;                                     % If false, no map will be plotted
 Num_scenarios_map = min(2, Num_scenarios);       % Indicates the number of scenarios where (a) map(s) will be plotted
 Num_maps_scenario = 3;                           % Indicates for a given scenario the number of plotted maps
 
 % Saves Data :
-saving = false;
+saving = true;                                   % If false, no data will be saved
 
 %=====================================%
 
@@ -231,15 +231,31 @@ if saving == true
         mkdir(datasetFolder);
         fprintf('Created dataset folder: %s\n', datasetFolder);
     end
+
+    % 1.1 Base file name
+    dt_str = num2str(params.step);
+    base_filename = sprintf('Radar_Dataset_dt_%s', dt_str);
     
-    % 1.1 .csv format
+    % 1.2 Iterating until finding available file name
+    idx = 1;
+    while true
+        % Generating potential names
+        filename_csv = fullfile(datasetFolder, sprintf('%s_%d.csv', base_filename, idx));
+        filename_mat = fullfile(datasetFolder, sprintf('%s_%d.mat', base_filename, idx));
+       
+        if ~exist(filename_csv, 'file') && ~exist(filename_mat, 'file')
+            break; 
+        end
+        idx = idx + 1; 
+    end
+
+    % 1.3 .csv format
     dataset_2D = reshape(permute(dataset, [2 1 3]), [], 10);
-    filename_csv = fullfile(datasetFolder, sprintf('Radar_Dataset_%d.csv', Num_scenarios));
     writematrix(dataset_2D, filename_csv);
     
-    % 1.2 .mat format
-    filename_mat = fullfile(datasetFolder, sprintf('Radar_Dataset_%d.mat', Num_scenarios));
-    save(filename_mat, 'dataset');
+    % 1.4 .mat format
+    dt = params.step; 
+    save(filename_mat, 'dataset', 'dt');
     
     fprintf('Dataset saved !\n');
     
@@ -248,11 +264,11 @@ if saving == true
     
         % 2.1 .csv format
         data_sigmaAngle_2D = reshape(permute(data_sigmaAngle, [2 1 3]), [], 2);
-        filename_sigma_csv = fullfile(datasetFolder, sprintf('SigmaAngle_Dataset_%d.csv', Num_sigma));
+        filename_sigma_csv = fullfile(datasetFolder, sprintf('SigmaAngle_Dataset_%d.csv', idx));
         writematrix(data_sigmaAngle_2D, filename_sigma_csv);
         
         % 2.2 .mat format
-        filename_sigma_mat = fullfile(datasetFolder, sprintf('SigmaAngle_Dataset_%d.mat', Num_sigma));
+        filename_sigma_mat = fullfile(datasetFolder, sprintf('SigmaAngle_Dataset_%d.mat', idx));
         save(filename_sigma_mat, 'data_sigmaAngle');
         
         fprintf('Sigma data saved !\n');

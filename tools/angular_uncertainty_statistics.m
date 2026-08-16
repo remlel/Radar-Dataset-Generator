@@ -6,12 +6,11 @@ projectRoot = fileparts(fileparts(mfilename('fullpath')));
 datasetFolder = fullfile(projectRoot, '..', 'Datasets');
 
 if ~exist(datasetFolder, 'dir')
-    mkdir(datasetFolder);
-    fprintf('Created dataset folder: %s\n', datasetFolder);
+    error('Dataset folder not found: %s', datasetFolder);
 end
 
 % 1. Loading sigma dataset (.mat)
-filename = fullfile(datasetFolder, 'SigmaAngle_Dataset_30.mat');
+filename = fullfile(datasetFolder, 'SigmaAngle_Dataset__.mat');
 if ~isfile(filename)
     error('The file %s cannot be found.', filename);
 end
