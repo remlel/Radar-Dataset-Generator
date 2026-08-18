@@ -2,6 +2,8 @@
 
 clear; clc; close all;
 
+rng('shuffle');
+
 % Creating path towards sub-folders
 projectRoot = fileparts(mfilename('fullpath'));
 addpath(genpath(projectRoot));
